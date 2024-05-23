@@ -1,5 +1,5 @@
 /*
-Didn't get a perfect credit (90/100)
+Didn't get a perfect score (90/100) : Incorrect Answer
 Code modification is required
 */
 
