@@ -1,6 +1,5 @@
 /*
-Didn't get a perfect credit (0/100)
-Time limit(1000ms) exceeded
+Didn't get a perfect credit (0/100) : Time limit(1000ms) exceeded
 Code modification is required
 */
 
