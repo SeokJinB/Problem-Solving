@@ -1,5 +1,5 @@
 /*
-Didn't get a perfect score (10/100) : Incorrect Answer
+Didn't get a perfect credit (50/100) : Time limit(1000ms) exceeded
 Code modification is required
 */
 
@@ -8,64 +8,54 @@ Code modification is required
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
-#include <stack>
+#include <queue>
 #include <climits>
 
 using namespace std;
 static int preIdx = 0;
-struct TreeNode {
+vector<int> leaves;
+struct TreeNode
+{
     int value;
     int num;
     struct TreeNode* left, * right;
 };
 
-int findMaxSum(TreeNode* root)
-{
-    int max_sum = INT_MIN;
-    stack<pair<TreeNode*, int> > s;
-    s.push(make_pair(root, 0));
+// Utility function to allocate memory for a new node
+bool isLeaf(TreeNode* node) {
+    return (node->left == nullptr && node->right == nullptr);
+}
 
-    while (!s.empty())
+int findMaxLeafToLeafSum(TreeNode* node, int& maxPathSum) {
+    if (node == nullptr) return 0;
+
+    if (isLeaf(node))
     {
-        auto node = s.top().first;
-        int state = s.top().second;
-        s.pop();
-
-        if (node == nullptr)
-        {
-            continue;
-        }
-
-        if (state == 0)
-        {
-            // first visit to the node
-            s.push(make_pair(node, 1));
-            s.push(make_pair(node->left, 0));
-        }
-        else if (state == 1)
-        {
-            // second visit to the node
-            s.push(make_pair(node, 2));
-            s.push(make_pair(node->right, 0));
-        }
-        else
-        {
-            // third visit to the node
-            int left_sum = (node->left != nullptr)
-                ? node->left->value
-                : 0;
-            int right_sum = (node->right != nullptr)
-                ? node->right->value
-                : 0;
-            max_sum
-                = max(max_sum, node->value + max(0, left_sum)
-                    + max(0, right_sum));
-            int max_child_sum = max(left_sum, right_sum);
-            node->value += max(0, max_child_sum);
-        }
+        leaves.emplace_back(node->value);
+        return node->value;
     }
 
-    return max_sum;
+    int leftSum = findMaxLeafToLeafSum(node->left, maxPathSum);
+    int rightSum = findMaxLeafToLeafSum(node->right, maxPathSum);
+
+    if (node->left && node->right) {
+        int currentPathSum = leftSum + node->value + rightSum;
+        if (currentPathSum > maxPathSum) {
+            maxPathSum = currentPathSum;
+        }
+
+        return std::max(leftSum, rightSum) + node->value;
+    }
+
+    return (node->left ? leftSum : rightSum) + node->value;
+}
+
+int getMaxLeafToLeafSum(TreeNode* root) {
+    if (root == nullptr) return 0;
+
+    int maxPathSum = INT_MIN;
+    findMaxLeafToLeafSum(root, maxPathSum);
+    return maxPathSum;
 }
 
 int get_inorder_index(vector<int> inorder, int begin, int end, int target)
@@ -156,10 +146,16 @@ int main()
         mapValuesToTree(root, inorder);
         //inorderTraversal(root);
 
-        int maxPathSum = findMaxSum(root);
 
-        ofp << maxPathSum << endl;
+        int maxPathleafSum = getMaxLeafToLeafSum(root);
+        int maxleaf = *max_element(leaves.begin(), leaves.end());
+
+        int maxPathSum = std::max(maxleaf, maxPathleafSum);
+
         //cout << maxPathSum << endl;
+        ofp << maxPathSum << endl;
+
+        leaves.clear();
     }
 
     ifp.close();
