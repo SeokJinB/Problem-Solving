@@ -19,41 +19,37 @@ struct TreeNode {
     struct TreeNode* left, * right;
 };
 
-// A utility function to allocate a new node
-struct TreeNode* newNode(int data)
-{
-    struct TreeNode* newNode = new TreeNode;
-    newNode->value = data;
-    newNode->left = newNode->right = NULL;
-    return (newNode);
-}
-
 int findMaxSum(TreeNode* root)
 {
     int max_sum = INT_MIN;
     stack<pair<TreeNode*, int> > s;
     s.push(make_pair(root, 0));
 
-    while (!s.empty()) {
+    while (!s.empty())
+    {
         auto node = s.top().first;
         int state = s.top().second;
         s.pop();
 
-        if (node == nullptr) {
+        if (node == nullptr)
+        {
             continue;
         }
 
-        if (state == 0) {
+        if (state == 0)
+        {
             // first visit to the node
             s.push(make_pair(node, 1));
             s.push(make_pair(node->left, 0));
         }
-        else if (state == 1) {
+        else if (state == 1)
+        {
             // second visit to the node
             s.push(make_pair(node, 2));
             s.push(make_pair(node->right, 0));
         }
-        else {
+        else
+        {
             // third visit to the node
             int left_sum = (node->left != nullptr)
                 ? node->left->value
@@ -72,7 +68,7 @@ int findMaxSum(TreeNode* root)
     return max_sum;
 }
 
-int get_inorder_index(int* inorder, int begin, int end, int target)
+int get_inorder_index(vector<int> inorder, int begin, int end, int target)
 {
     for (int i = begin; i <= end; i++)
     {
@@ -82,7 +78,7 @@ int get_inorder_index(int* inorder, int begin, int end, int target)
     return -1;
 }
 
-TreeNode* tree_restore(int* preorder, int* inorder,  int begin, int end)
+TreeNode* tree_restore(vector<int> preorder, vector<int> inorder, int begin, int end)
 {
     TreeNode* newNode = NULL;
 
@@ -99,10 +95,12 @@ TreeNode* tree_restore(int* preorder, int* inorder,  int begin, int end)
     return newNode;
 }
 
-void mapValuesToTree(TreeNode* root, const std::vector<int>& arr) {
+void mapValuesToTree(TreeNode* root, const std::vector<int>& arr)
+{
     if (!root) return;
 
-    if (root->num < arr.size()) {
+    if (root->num < arr.size())
+    {
         root->value = arr[root->num];
     }
 
@@ -110,8 +108,10 @@ void mapValuesToTree(TreeNode* root, const std::vector<int>& arr) {
     mapValuesToTree(root->right, arr);
 }
 
-void inorderTraversal(TreeNode* root) {
-    if (root) {
+void inorderTraversal(TreeNode* root)
+{
+    if (root)
+    {
         inorderTraversal(root->left);
         std::cout << "Node value: " << root->value << ", Node num: " << root->num << std::endl;
         inorderTraversal(root->right);
@@ -133,8 +133,8 @@ int main()
         ifp >> n;
         int index;
 
-        int* preorderNum = new int[n];
-        int* inorderNum = new int[n];
+        vector<int> preorderNum(n);
+        vector<int> inorderNum(n);
         vector<int> preorder(n);
         vector<int> inorder(n);
         vector<int> path;
@@ -156,11 +156,11 @@ int main()
 
         mapValuesToTree(root, inorder);
         //inorderTraversal(root);
-        int maxPathSum = findMaxSum(root);
-        ofp << maxPathSum << endl;
 
-        delete[] inorderNum;
-        delete[] preorderNum;
+        int maxPathSum = findMaxSum(root);
+
+        ofp << maxPathSum << endl;
+        //cout << maxPathSum << endl;
     }
 
     ifp.close();
