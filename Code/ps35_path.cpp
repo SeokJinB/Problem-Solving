@@ -137,7 +137,6 @@ int main()
         vector<int> inorderNum(n);
         vector<int> preorder(n);
         vector<int> inorder(n);
-        vector<int> path;
 
         for (int i = 0; i < n; i++)
         {
