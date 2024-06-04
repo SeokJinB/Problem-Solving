@@ -1,8 +1,3 @@
-/*
-Didn't get a perfect credit (50/100) : Time limit(1000ms) exceeded
-Code modification is required
-*/
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -58,7 +53,7 @@ int getMaxLeafToLeafSum(TreeNode* root) {
     return maxPathSum;
 }
 
-int get_inorder_index(vector<int> inorder, int begin, int end, int target)
+int get_inorder_index(int* inorder, int begin, int end, int target)
 {
     for (int i = begin; i <= end; i++)
     {
@@ -68,7 +63,7 @@ int get_inorder_index(vector<int> inorder, int begin, int end, int target)
     return -1;
 }
 
-TreeNode* tree_restore(vector<int> preorder, vector<int> inorder, int begin, int end)
+TreeNode* tree_restore(int* preorder, int* inorder, int begin, int end)
 {
     TreeNode* newNode = NULL;
 
@@ -123,8 +118,8 @@ int main()
         ifp >> n;
         int index;
 
-        vector<int> preorderNum(n);
-        vector<int> inorderNum(n);
+        int* preorderNum = new int[n];
+        int* inorderNum = new int[n];
         vector<int> preorder(n);
         vector<int> inorder(n);
 
@@ -156,6 +151,8 @@ int main()
         ofp << maxPathSum << endl;
 
         leaves.clear();
+        delete[] inorderNum;
+        delete[] preorderNum;
     }
 
     ifp.close();
