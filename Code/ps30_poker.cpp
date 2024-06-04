@@ -1,8 +1,3 @@
-/*
-Didn't get a perfect score (90/100) : Incorrect Answer
-Code modification is required
-*/
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -129,9 +124,9 @@ bool Straight(vector<int>& ranks)
 
 bool StraightFlush(bool cards[4][14])
 {
-    int consecutiveCount = 0;
     for (int i = 0; i < 4; i++)
     {
+        int consecutiveCount = 0;
         for (int j = 0; j < 14; j++)
         {
             if (cards[i][j])
