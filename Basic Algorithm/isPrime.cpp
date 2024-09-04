@@ -26,5 +26,7 @@ int main()
 		cout << n << " is prime number." << endl;
 	else
 		cout << n << " is not prime number." << endl;
+
+	return 0;
 }
 
