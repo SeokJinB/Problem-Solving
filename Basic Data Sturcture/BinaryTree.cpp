@@ -94,6 +94,17 @@ public:
 		return node;
 	}
 
+	Node* search(Node* node, int data)
+	{
+		if (node == nullptr || data == node->data)
+			return node;
+
+		if (data < node->data)
+			return search(node->left, data);
+		else
+			return search(node->right, data);
+	}
+
 	void inorderTraversal(Node* node)
 	{
 		if (node == nullptr)
@@ -153,6 +164,14 @@ int main()
 	cout << "After deleting 20: ";
 	tree.inorderTraversal(tree.root);
 	cout << endl;
+
+	int searchVal = 40;
+	Node* result = tree.search(tree.root, searchVal);
+
+	if (result != nullptr)
+		cout << "Node with value " << searchVal << " found in the tree." << endl;
+	else
+		cout << "Node with value " << searchVal << " not found in the tree." << endl;
 
 	return 0;
 }
