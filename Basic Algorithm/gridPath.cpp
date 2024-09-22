@@ -61,5 +61,5 @@ int main()
 		{0,0,0,0}
 	};
 
-	cout << explorePath(grid) << endl;
+	cout << gridPath(grid) << endl;
 }
