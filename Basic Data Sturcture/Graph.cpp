@@ -1,114 +1,127 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <climits> // for INT_MAX
 
 using namespace std;
 
 class Graph
 {
 public:
-	int vertices;
-	vector<vector<int>> adjMatrix;
+    int vertices;
+    vector<vector<int>> adjMatrix;
 
-	Graph(int vertices)
-	{
-		this->vertices = vertices;
-		adjMatrix.resize(vertices, vector<int>(vertices, 0));
-	}
+    // Constructor
+    Graph(int vertices)
+    {
+        this->vertices = vertices;
+        adjMatrix.resize(vertices, vector<int>(vertices, INT_MAX)); // 무한대로 초기화
 
-	void addEdge(int v, int w)
-	{
-		adjMatrix[v][w] = 1;
-		adjMatrix[w][v] = 1;
-	}
+        // 대각선(자기 자신으로의 경로)은 0으로 설정
+        for (int i = 0; i < vertices; i++)
+            adjMatrix[i][i] = 0;
+    }
 
-	bool BFS(int start, int target)
-	{
-		vector<bool> visited(vertices, false);
-		queue<int> q;
+    // 가중치가 있는 간선 추가
+    void addEdge(int v, int w, int weight)
+    {
+        adjMatrix[v][w] = weight;
+        adjMatrix[w][v] = weight; // 무방향 그래프이므로 대칭으로 설정
+    }
 
-		visited[start] = true;
-		q.push(start);
+    // BFS 구현 (가중치와 무관)
+    bool BFS(int start, int target)
+    {
+        vector<bool> visited(vertices, false);
+        queue<int> q;
 
-		while (!q.empty())
-		{
-			int v = q.front();
-			q.pop();
-			//cout << v << " ";
+        visited[start] = true;
+        q.push(start);
 
-			if (v == target)
-				return true;
+        while (!q.empty())
+        {
+            int v = q.front();
+            q.pop();
 
-			for (int i = 0; i < vertices; i++)
-			{
-				if (adjMatrix[v][i] == 1 && !visited[i])
-				{
-					visited[i] = true;
-					q.push(i);
-				}
-			}
-		}
-		return false;
-	}
+            if (v == target)
+                return true;
 
-	bool DFS(int v, int target, vector<bool>& visited)
-	{
-		visited[v] = true;
-		//cout<< v << " ";
+            for (int i = 0; i < vertices; i++)
+            {
+                if (adjMatrix[v][i] != INT_MAX && !visited[i]) // 간선이 존재하는 경우
+                {
+                    visited[i] = true;
+                    q.push(i);
+                }
+            }
+        }
+        return false;
+    }
 
-		if (v == target)
-			return true;
+    // DFS 구현 (가중치와 무관)
+    bool DFS(int v, int target, vector<bool>& visited)
+    {
+        visited[v] = true;
 
-		for (int i = 0; i < vertices; i++)
-		{
-			if (adjMatrix[v][i] == 1 && !visited[i])
-			{
-				if (DFS(i, target, visited))
-					return true;
-			}
-		}
+        if (v == target)
+            return true;
 
-		return false;
-	}
+        for (int i = 0; i < vertices; i++)
+        {
+            if (adjMatrix[v][i] != INT_MAX && !visited[i]) // 간선이 존재하는 경우
+            {
+                if (DFS(i, target, visited))
+                    return true;
+            }
+        }
+        return false;
+    }
 
-	void printGraph()
-	{
-		for (int i = 0; i < vertices; i++)
-		{
-			for (int j = 0; j < vertices; j++)
-			{
-				cout << adjMatrix[i][j] << " ";
-			}
-			cout << endl;
-		}
-	}
+    // 그래프 출력
+    void printGraph()
+    {
+        for (int i = 0; i < vertices; i++)
+        {
+            for (int j = 0; j < vertices; j++)
+            {
+                if (adjMatrix[i][j] == INT_MAX)
+                    cout << "INF ";
+                else
+                    cout << adjMatrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
 };
 
-int main(void)
+int main()
 {
-	Graph g(5);
+    Graph g(5);
 
-	g.addEdge(0, 1);
-	g.addEdge(0, 4);
-	g.addEdge(1, 2);
-	g.addEdge(1, 3);
-	g.addEdge(1, 4);
-	g.addEdge(2, 3);
-	g.addEdge(3, 4);
+    g.addEdge(0, 1, 2);
+    g.addEdge(0, 4, 1);
+    g.addEdge(1, 2, 3);
+    g.addEdge(1, 3, 2);
+    g.addEdge(1, 4, 2);
+    g.addEdge(2, 3, 4);
+    g.addEdge(3, 4, 1);
 
-	g.printGraph();
+    cout << "Adjacency Matrix with Weights:\n";
+    g.printGraph();
 
-	int target = 3;
+    int target = 3;
 
-	if (g.BFS(0, target))
-		cout << "Target " << target << " found using BFS!" << endl;
-	else
-		cout << "Target " << target << " not found using BFS!" << endl;
+    if (g.BFS(0, target))
+        cout << "Target " << target << " found using BFS!" << endl;
+    else
+        cout << "Target " << target << " not found using BFS!" << endl;
 
-	vector<bool> visited(g.vertices, false);
+    vector<bool> visited(g.vertices, false);
 
-	if (g.DFS(0, target, visited))
-		cout << "Target " << target << " found using DFS!" << endl;
-	else
-		cout << "Target " << target << " not found using DFS!" << endl;
+    if (g.DFS(0, target, visited))
+        cout << "Target " << target << " found using DFS!" << endl;
+    else
+        cout << "Target " << target << " not found using DFS!" << endl;
+
+    return 0;
 }
